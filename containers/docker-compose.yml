@@ -1,0 +1,29 @@
+version: '2'
+services:
+  elasticsearch:
+    build: elasticsearch
+    environment:
+     - ES_JAVA_OPTS=-Xmx4g -Xms4g
+    ports:
+     - "9200:9200"
+    volumes:
+     - data:/usr/share/elasticsearch/data
+  kibana:
+    image: docker.elastic.co/kibana/kibana:5.4.0
+    ports:
+     - "5601:5601"
+    depends_on:
+     - elasticsearch
+  httpbeat:
+    build: httpbeat
+    environment:
+     - ENV HTTPBEAT_USER="elastic"
+     - HTTPBEAT_PWD="changeme"
+     - ELASTICSEARCH_HOST="elasticsearch"
+     - ELASTICSEARCH_PORT="9200"
+    depends_on:
+     - elasticsearch
+
+volumes:
+    data:
+        driver: local

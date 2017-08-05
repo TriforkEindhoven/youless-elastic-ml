@@ -1,0 +1,32 @@
+#================================ Httpbeat =====================================
+httpbeat:
+
+  urls:
+    -
+      cron: "@every 1m"
+      url: http://192.168.1.1/a?f=j
+      method: get
+      document_type: usage
+      output_format: json
+
+#================================ Outputs =====================================
+
+#-------------------------- Elasticsearch output ------------------------------
+output.elasticsearch:
+  enabled: true
+  hosts: ["elasticsearch:9200"]
+  pipeline: youless
+
+#------------------------------- File output ----------------------------------
+output.file:
+  enabled: true
+  path: "/tmp/httpbeat"
+  filename: httpbeat
+
+#================================ Logging =====================================
+logging:
+  level: debug
+  files:
+    path: /tmp/log
+    name: httpbeat
+  to_files: true
